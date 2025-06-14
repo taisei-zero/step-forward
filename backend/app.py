@@ -1,8 +1,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 開発中は全部許可でOK。公開時は限定しよう
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class Book(BaseModel):
     id: int
