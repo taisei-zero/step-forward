@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { Book } from "@/types/book";
+import { Book } from "../types/book";
+import Link from "next/link";
 
 const ratingStars = (n: number) =>
   "★★★★★☆☆☆☆☆".slice(5 - n, 10 - n);
@@ -24,6 +25,7 @@ export default function BookList() {
   return (
     <div className="max-w-3xl mx-auto py-10 px-4">
       <h1 className="text-3xl font-bold mb-6 text-center">📚 読書記録一覧</h1>
+      <Link href="/books/new" className="bg-green-500 text-white px-4 py-2 rounded">新規登録</Link>
       {books.length === 0 && (
         <div className="text-gray-400 text-center">まだ記録がありません。</div>
       )}
