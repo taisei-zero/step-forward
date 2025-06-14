@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { Book } from "../types/book";
+import { Book } from "@/types/book";
+
+const ratingStars = (n: number) =>
+  "★★★★★☆☆☆☆☆".slice(5 - n, 10 - n);
 
 export default function BookList() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -16,23 +19,32 @@ export default function BookList() {
       });
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="text-center py-10 text-lg text-gray-500">Loading...</div>;
 
   return (
-    <div className="max-w-2xl mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-4">読書記録一覧</h1>
-      <ul className="space-y-4">
+    <div className="max-w-3xl mx-auto py-10 px-4">
+      <h1 className="text-3xl font-bold mb-6 text-center">📚 読書記録一覧</h1>
+      {books.length === 0 && (
+        <div className="text-gray-400 text-center">まだ記録がありません。</div>
+      )}
+      <div className="grid md:grid-cols-2 gap-6">
         {books.map(book => (
-          <li key={book.id} className="border rounded p-4 shadow">
-            <div><strong>タイトル：</strong>{book.title}</div>
-            <div><strong>著者：</strong>{book.author}</div>
-            <div><strong>読了日：</strong>{book.date}</div>
-            <div><strong>評価：</strong>{book.rating}</div>
-            <div><strong>カテゴリ：</strong>{book.category}</div>
-          </li>
+          <div
+            key={book.id}
+            className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-shadow border border-gray-100 flex flex-col gap-2"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-semibold text-lg">{book.title}</span>
+              <span className="text-yellow-500 text-lg">{ratingStars(book.rating)}</span>
+            </div>
+            <div className="text-sm text-gray-500 mb-1">{book.author}</div>
+            <div className="flex justify-between text-xs text-gray-400">
+              <span>読了日: {book.date}</span>
+              <span className="bg-blue-100 text-blue-500 px-2 py-0.5 rounded-md font-medium">{book.category}</span>
+            </div>
+          </div>
         ))}
-      </ul>
-      {books.length === 0 && <div className="text-gray-500">まだ記録がありません。</div>}
+      </div>
     </div>
   );
 }
