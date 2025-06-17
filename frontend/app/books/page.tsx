@@ -20,6 +20,20 @@ export default function BookList() {
       });
   }, []);
 
+  // 削除ハンドラ
+  const handleDelete = async (bookId: number, title: string) => {
+    if (!confirm(`本当に削除しますか？: ${title}`)) return;
+    // バックエンドAPIにDELETEリクエスト
+    const res = await fetch(`http://localhost:8000/books/${bookId}`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      setBooks(prev => prev.filter(b => b.id !== bookId)); // フロント側も即反映
+    } else {
+      alert("削除に失敗しました");
+    }
+  };
+
   if (loading) return <div className="text-center py-10 text-lg text-gray-500">Loading...</div>;
 
   return (
@@ -33,8 +47,15 @@ export default function BookList() {
         {books.map(book => (
           <div
             key={book.id}
-            className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-shadow border border-gray-100 flex flex-col gap-2"
+            className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-shadow border border-gray-100 flex flex-col gap-2 relative"
           >
+            <button
+              onClick={() => handleDelete(book.id, book.title)}
+              className="absolute top-3 right-4 text-red-500 hover:text-red-700 font-bold text-lg"
+              title="削除"
+            >
+              ×
+            </button>
             <div className="flex items-center justify-between mb-2">
               <span className="font-semibold text-lg">{book.title}</span>
               <span className="text-yellow-500 text-lg">{ratingStars(book.rating)}</span>
