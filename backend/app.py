@@ -41,3 +41,12 @@ def delete_book(book_id: int):
             del books_db[i]
             return
     raise HTTPException(status_code=404, detail="Book not found")
+
+@app.put("/books/{book_id}", response_model=None)
+def update_book(book_id: int, updated: Book):
+    for i, book in enumerate(books_db):
+        if book.id == book_id:
+            # 新しい内容で上書き
+            books_db[i] = Book(id=book_id, **updated.dict())
+            return
+    raise HTTPException(status_code=404, detail="Book not found")
